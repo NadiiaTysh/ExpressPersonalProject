@@ -2,10 +2,13 @@ import { Customers } from '../../controllers';
 
 export const get = async (req, res) => {
     try {
-        const customers = new Customers();
-        const data = await customers.getAllRecords();
-
-        res.status(200).json({ data });
+        if (req.session.user.t === 'staff') {
+            const customers = new Customers();
+            const data = await customers.getAllRecords();
+            res.status(200).json({ data });
+        } else {
+            throw new Error('You don\'t have permission to view this content');
+        }
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

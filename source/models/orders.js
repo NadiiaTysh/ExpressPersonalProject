@@ -6,8 +6,7 @@ export class Orders {
     }
 
     async create() {
-        const staffPerson = await this._transformCreateStaffPerson(this.data);
-        const data = await orders.create(staffPerson);
+        const data = await orders.create(this.data);
 
         return { hash: data.hash };
     }
@@ -16,20 +15,24 @@ export class Orders {
         const data = await orders.find({})
             .skip((pageNum - 1) * perPage)
             .limit(perPage)
-            .populate({ path: 'classes', select: '-_id -__v'});
+            .populate({ path: 'uid', select: '-_id -__v'})
+            .populate({ path: 'pid', select: '-_id -__v'});
 
         return data;
     }
 
     async getOneRecord(hash) {
         const data = await orders.findOne({ hash })
-            .populate({ path: 'classes', select: '-_id -__v'});
+            .populate({ path: 'uid', select: '-_id -__v'})
+            .populate({ path: 'pid', select: '-_id -__v'});
 
         return data;
     }
 
     async modifyOneRecord(hash, payload) {
-        const data = await orders.findOneAndUpdate({ hash }, payload, { new: true });
+        const data = await orders.findOneAndUpdate({ hash }, payload, { new: true })
+            .populate({ path: 'uid', select: '-_id -__v -t -emails -city -country -created -modified -hash'})
+            .populate({ path: 'pid', select: '-_id -__v -discount -total -created -modified -hash'});
 
         return data;
     }

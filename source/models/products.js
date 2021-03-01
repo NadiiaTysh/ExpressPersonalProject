@@ -6,8 +6,7 @@ export class Products {
     }
 
     async create() {
-        const staffPerson = await this._transformCreateStaffPerson(this.data);
-        const data = await products.create(staffPerson);
+        const data = await products.create(this.data);
 
         return { hash: data.hash };
     }
@@ -15,15 +14,13 @@ export class Products {
     async getAllRecords(pageNum = 1, perPage = 10) {
         const data = await products.find({})
             .skip((pageNum - 1) * perPage)
-            .limit(perPage)
-            .populate({ path: 'classes', select: '-_id -__v'});
+            .limit(perPage);
 
         return data;
     }
 
     async getOneRecord(hash) {
-        const data = await products.findOne({ hash })
-            .populate({ path: 'classes', select: '-_id -__v'});
+        const data = await products.findOne({ hash });
 
         return data;
     }

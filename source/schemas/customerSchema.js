@@ -40,6 +40,6 @@ export const customerSchema = {
             type: 'string',
         },
     },
-    required:             [ 'name', 'emails', 'phones', 'password', 'city', 'country' ],
+    required:             [ 'name', 'emails', 'phones', 'password' ],
     additionalProperties: false,
 };

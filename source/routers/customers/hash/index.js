@@ -4,10 +4,13 @@ export const getByHash = async (req, res) => {
     try {
         const { customerHash } = req.params;
 
-        const customer = new Customers();
-        const data = await customer.getOneRecord(customerHash);
-
-        res.status(200).json({ data });
+        if (req.session.user.hash === customerHash) {
+            const customer = new Customers();
+            const data = await customer.getOneRecord(customerHash);
+            res.status(200).json({ data });
+        } else {
+            throw new Error('You don\'t have permission to view this content');
+        }
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -15,12 +18,17 @@ export const getByHash = async (req, res) => {
 export const updateByHash = async (req, res) => {
     try {
         const { customerHash } = req.params;
-        const payload = req.body;
 
-        const customer = new Customers();
-        const data = await customer.modifyOneRecord(customerHash, payload);
+        if (req.session.user.hash === customerHash) {
+            const payload = req.body;
 
-        res.status(200).json({ data });
+            const customer = new Customers();
+            const data = await customer.modifyOneRecord(customerHash, payload);
+
+            res.status(200).json({ data });
+        } else {
+            throw new Error('You don\'t have permission to view this content');
+        }
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -29,10 +37,14 @@ export const deleteByHash = async (req, res) => {
     try {
         const { customerHash } = req.params;
 
-        const customer = new Customers();
-        await customer.removeOneRecord(customerHash);
+        if (req.session.user.hash === customerHash) {
+            const customer = new Customers();
+            await customer.removeOneRecord(customerHash);
 
-        res.sendStatus(204);
+            res.sendStatus(204);
+        } else {
+            throw new Error('You don\'t have permission to view this content');
+        }
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

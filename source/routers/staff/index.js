@@ -10,7 +10,7 @@ import { staffSchema } from '../../schemas';
 
 const router = express.Router();
 
-router.get('/staff', [ limiter(2, 1000 * 60), authenticate ], get);
-router.post('/staff', [ validator(staffSchema) ], post);
+router.get('/', [ limiter(2, 1000 * 60), authenticate ], get);
+router.post('/', [ validator(staffSchema) ], post);
 
 export { router as staff };

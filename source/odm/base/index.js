@@ -1,13 +1,14 @@
 import mongoose from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
+
+import { addHash as hashPlugin } from '../helpers';
+
+mongoose.plugin(hashPlugin, { unique: true });
 
 const baseSchema = new mongoose.Schema(
     {
         hash: {
             type:     String,
             required: true,
-            unique:   true,
-            default:  uuidv4,
         },
         name: {
             first: {
@@ -33,7 +34,6 @@ const baseSchema = new mongoose.Schema(
             {
                 phone: {
                     type:     String,
-                    unique:   true,
                     required: true,
                 },
                 primary: Boolean,
@@ -50,6 +50,7 @@ const baseSchema = new mongoose.Schema(
             createdAt: 'created',
             updatedAt: 'modified',
         },
+        discriminatorKey: 't',
     },
 );
 

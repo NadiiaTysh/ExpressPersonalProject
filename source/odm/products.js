@@ -1,12 +1,13 @@
 import mongoose from 'mongoose';
-import { v4 as uuidv4 } from 'uuidv4';
+
+import { addHash as hashPlugin } from './helpers';
+
+mongoose.plugin(hashPlugin, { unique: true });
 
 const productSchema = new mongoose.Schema({
     hash: {
         type:     String,
         required: true,
-        unique:   true,
-        default:  uuidv4,
     },
     title: {
         type:     String,

@@ -12,6 +12,9 @@ import { getPassword, NotFoundError } from './helpers';
 // Initialize DB connection
 import './db';
 
+// Routers
+import * as routers from './routers';
+
 const app = express();
 const debug = dg('server:init');
 const MongoStore = connectMongo(session);
@@ -57,6 +60,12 @@ if (process.env.NODE_ENV === 'development') {
         next();
     });
 }
+
+app.use('/', routers.auth);
+app.use('/staff', routers.staff);
+app.use('/customers', routers.customers);
+app.use('/products', routers.products);
+app.use('/orders', routers.orders);
 
 app.use('*', (req, res, next) => {
     const error = new NotFoundError(

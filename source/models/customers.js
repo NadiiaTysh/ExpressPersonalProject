@@ -1,3 +1,5 @@
+import bcrypt from 'bcryptjs';
+
 import { customers } from '../odm';
 
 export class Customers {
@@ -6,8 +8,8 @@ export class Customers {
     }
 
     async create() {
-        const staffPerson = await this._transformCreateStaffPerson(this.data);
-        const data = await customers.create(staffPerson);
+        const hashedData = await this._transformCreatePerson(this.data);
+        const data = await customers.create(hashedData);
 
         return { hash: data.hash };
     }
@@ -15,15 +17,13 @@ export class Customers {
     async getAllRecords(pageNum = 1, perPage = 10) {
         const data = await customers.find({})
             .skip((pageNum - 1) * perPage)
-            .limit(perPage)
-            .populate({ path: 'classes', select: '-_id -__v'});
+            .limit(perPage);
 
         return data;
     }
 
     async getOneRecord(hash) {
-        const data = await customers.findOne({ hash })
-            .populate({ path: 'classes', select: '-_id -__v'});
+        const data = await customers.findOne({ hash });
 
         return data;
     }
@@ -38,5 +38,22 @@ export class Customers {
         const data = await customers.findOneAndRemove({ hash });
 
         return data;
+    }
+
+    async _transformCreatePerson(data) {
+        const { name, emails, phones, password, role, disabled, city, country } = data;
+        const hashedPassword = await bcrypt.hash(password, 11);
+        const person = {
+            name,
+            emails,
+            role,
+            phones,
+            password: hashedPassword,
+            disabled,
+            city,
+            country,
+        };
+
+        return person;
     }
 }

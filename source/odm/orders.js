@@ -1,8 +1,10 @@
 import mongoose from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
 
 import { customers, products } from './';
-import { uidValidator, pidValidator } from './validators';
+import { uidValidator, pidValidator } from './helpers';
+import { addHash as hashPlugin } from './helpers';
+
+mongoose.plugin(hashPlugin, { unique: true });
 
 const orderSchema = new mongoose.Schema({
     uid: {
@@ -18,8 +20,6 @@ const orderSchema = new mongoose.Schema({
     hash: {
         type:     String,
         required: true,
-        unique:   true,
-        default:  uuidv4,
     },
     count: {
         type:     Number,
