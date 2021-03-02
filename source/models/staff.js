@@ -17,7 +17,8 @@ export class Staff {
     async getAllRecords(pageNum = 1, perPage = 10) {
         const data = await staff.find({})
             .skip((pageNum - 1) * perPage)
-            .limit(perPage);
+            .limit(perPage)
+            .select('-t -_id -disabled -created -modified -hash -__v -phones._id -phones.hash -emails._id -emails.hash');
 
         return data;
     }

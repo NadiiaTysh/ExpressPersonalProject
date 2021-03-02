@@ -36,4 +36,10 @@ export class Products {
 
         return data;
     }
+
+    async decreaseQuantity(id) {
+        const data = await this.models.products.decreaseQuantity(id);
+
+        return data;
+    }
 }

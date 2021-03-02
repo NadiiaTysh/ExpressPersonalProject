@@ -7,6 +7,7 @@ import { customers, staff } from '../odm';
 export class Auth {
     constructor(data) {
         this.data = data;
+        this.selectOptions = 't role emails hash password __t';
     }
 
     async login() {
@@ -19,12 +20,12 @@ export class Auth {
 
             const data1 = await customers
                 .findOne({ 'emails.email': userEmail })
-                .select('t role emails hash password __t')
+                .select(this.selectOptions)
                 .lean();
 
             const data2 = await staff
                 .findOne({ 'emails.email': userEmail })
-                .select('t role emails hash password __t')
+                .select(this.selectOptions)
                 .lean();
 
             const data = data1 || data2;
